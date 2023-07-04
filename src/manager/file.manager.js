@@ -30,7 +30,7 @@ set = async (data) => {
 update = async (data) => {
     const list = await this.get()
     const idx = list.findIndex (a => a.id == data.id)
-    list(idx) = data
+    list[idx] = data
     return fs.promises.writeFile(this.filename, JSON.stringify(list))
 }
 }
