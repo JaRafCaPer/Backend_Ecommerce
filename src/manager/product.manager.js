@@ -6,11 +6,17 @@ export default class ProductManager extends FileManager {
   }
 
   create = async (data) => {
-    const { title, description, code, price, stock, category, thumbnails } = data;
+    const { title, description, code, price, status, stock, category, thumbnails } = data;
 
     const currentData = await this.get();
 
-    const id = this.getNextId(currentData);
+   
+  const existingProduct = currentData.find((product) => product.code === code);
+  if (existingProduct) {
+    throw new Error("Product with the same code already exists");
+  }
+
+    const id = parseInt(this.getNextId(currentData));
 
     const product = {
       id,
@@ -18,7 +24,7 @@ export default class ProductManager extends FileManager {
       description,
       code,
       price,
-      status: true,
+      status: status === undefined ? true : status,
       stock,
       category,
       thumbnails: thumbnails || [],
@@ -35,21 +41,19 @@ export default class ProductManager extends FileManager {
 
   delete = async (id) => {
     const currentData = await this.get();
-  
-    // Find the index of the product with the matching ID
+
     const productIndex = currentData.findIndex((product) => product.id === parseInt(id));
   
     if (productIndex !== -1) {
-      // Remove the product from the array
-      currentData.splice(productIndex, 1);
+     
+      const updatedData = currentData.filter((product) => product.id !== parseInt(id));
   
-      // Save the updated data to the file
-      await this.set(currentData);
+   
+      await fs.promises.writeFile(this.filename, JSON.stringify(updatedData));
   
-      return true; // Indicate successful deletion
+      return true; 
     }
   
-    return false; // Indicate product not found
+    return false; 
   };
-  
 }

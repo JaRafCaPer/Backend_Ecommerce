@@ -36,8 +36,10 @@ router.post("/", validateRequiredFields, async (req, res) => {
   try {
     const result = await productManager.create(data);
     res.send(result);
+    console.log("Product created successfully");
   } catch (error) {
     res.status(500).json({ error: "Failed to create product" });
+    console.log("Error creating product");
   }
 });
 
@@ -53,17 +55,17 @@ router.put("/:pid", async (req, res) => {
   const updatedProduct = {
     ...existingProduct,
     ...updatedFields,
-    id: existingProduct.id, // Ensure the ID remains unchanged
+    id: existingProduct.id, 
   };
 
   try {
     const result = await productManager.update(updatedProduct);
     res.send(result);
+    console.log("Product updated successfully");
   } catch (error) {
     res.status(500).json({ error: "Failed to update product" });
   }
 });
-
 
 router.delete("/:pid", async (req, res) => {
   const { pid } = req.params;
@@ -77,13 +79,15 @@ router.delete("/:pid", async (req, res) => {
     const result = await productManager.delete(pid);
     if (result) {
       res.send({ message: "Product deleted successfully" });
+      console.log("Product deleted successfully");
     } else {
-      res.status(500).send({ message: "Failed to delete product 5678" });
+      res.status(500).send({ message: "Failed to delete product" });
+      console.log("Failed to delete product");
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete product 1234" });
+    res.status(500).json({ error: "Failed to delete product" });
+    console.log("Error deleting product");
   }
 });
-
 
 export default router;
