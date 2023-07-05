@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'fs';
 
 class FileManager {
     constructor (filename='./db.json'){
@@ -25,8 +25,10 @@ set = async (data) => {
     const list = await this.get()
     data.id = this.getNextId(list)
     list.push(data)
-    return fs.promises.writeFile(this.filename, JSON.stringify(list))
+    await fs.promises.writeFile(this.filename, JSON.stringify(list), { flag: 'w' })
+    return data;
 }
+
 update = async (data) => {
     const list = await this.get()
     const idx = list.findIndex (a => a.id == data.id)
