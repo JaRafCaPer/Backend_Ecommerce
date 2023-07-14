@@ -53,5 +53,19 @@ export default class CartManager extends FileManager {
     return await this.update(cart);
   };
   
-  
+  deleteProduct = async (cid, pid) => {
+    const cart = await this.getById(cid);
+    if (!cart) {
+      throw new Error('Cart not found');
+    }
+
+    const productIndex = cart.products.findIndex((product) => product.id === pid);
+    if (productIndex === -1) {
+      throw new Error('Product not found in cart');
+    }
+
+    cart.products.splice(productIndex, 1);
+    await this.update(cart);
+    return true;
+  };
 }

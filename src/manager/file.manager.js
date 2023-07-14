@@ -29,11 +29,15 @@ set = async (data) => {
     return data;
 }
 
-update = async (data) => {
-    const list = await this.get()
-    const idx = list.findIndex (a => a.id == data.id)
-    list[idx] = data
-    return fs.promises.writeFile(this.filename, JSON.stringify(list))
-}
+update = async (id, updatedFields) => {
+    const existingProduct = await this.getById(id);
+    if (!existingProduct) {
+      throw new Error('Product not found');
+    }
+
+    const updatedProduct = Object.assign({}, existingProduct, updatedFields, { id: existingProduct.id });
+    await this.set(updatedProduct);
+    return updatedProduct;
+  };
 }
 export default FileManager

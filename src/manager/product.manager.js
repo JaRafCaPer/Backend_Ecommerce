@@ -6,7 +6,7 @@ export default class ProductManager extends FileManager {
   }
 
   create = async (data) => {
-    const { title, description, code, price, status, stock, category, thumbnails } = data;
+    const { title, description, code, price, status, stock, category, thumbnail } = data;
 
     const currentData = await this.get();
 
@@ -27,7 +27,7 @@ export default class ProductManager extends FileManager {
       status: status === undefined ? true : status,
       stock,
       category,
-      thumbnails: thumbnails || [],
+      thumbnail: thumbnail || [],
     };
 
     const result = await this.set(product);

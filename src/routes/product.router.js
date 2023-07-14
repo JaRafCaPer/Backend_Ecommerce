@@ -43,27 +43,15 @@ router.post("/", validateRequiredFields, async (req, res) => {
   }
 });
 
-router.put("/:pid", async (req, res) => {
+router.put('/:pid', async (req, res) => {
   const { pid } = req.params;
   const updatedFields = req.body;
-  const existingProduct = await productManager.getById(pid);
-
-  if (!existingProduct) {
-    return res.status(404).send({ message: "Product not found" });
-  }
-
-  const updatedProduct = {
-    ...existingProduct,
-    ...updatedFields,
-    id: existingProduct.id, 
-  };
-
   try {
-    const result = await productManager.update(updatedProduct);
+    const result = await productManager.update(pid, updatedFields);
     res.send(result);
-    console.log("Product updated successfully");
+    console.log('Product updated successfully');
   } catch (error) {
-    res.status(500).json({ error: "Failed to update product" });
+    res.status(404).json({ error: error.message });
   }
 });
 
